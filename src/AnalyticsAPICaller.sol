@@ -6,14 +6,8 @@ import {ConfirmedOwner} from "@chainlink/contracts/v0.8/shared/access/ConfirmedO
 import {FunctionsRequest} from "@chainlink/contracts/v0.8/functions/dev/v1_0_0/libraries/FunctionsRequest.sol";
 
 /**
- * Request testnet LINK and ETH here: https://faucets.chain.link/
- * Find information on LINK Token Contracts and get the latest ETH and LINK faucets here: https://docs.chain.link/resources/link-token-contracts/
- */
-
-/**
- * @title GettingStartedFunctionsConsumer
- * @notice This is an example contract to show how to make HTTP requests using Chainlink
- * @dev This contract uses hardcoded values and should not be used in production.
+ * @title AnalyticsAPICaller
+ * @notice Contract to make HTTP requests using Chainlink Functions to Kasheba analytics API
  */
 contract AnalyticsAPICaller is FunctionsClient, ConfirmedOwner {
     using FunctionsRequest for FunctionsRequest.Request;
@@ -36,15 +30,14 @@ contract AnalyticsAPICaller is FunctionsClient, ConfirmedOwner {
 
     // Router address - Hardcoded for Sepolia
     // Check to get the router address for your supported network https://docs.chain.link/chainlink-functions/supported-networks
-    address router;
+    address public immutable router;
 
     // JavaScript source code
-    // Fetch character name from the Star Wars API.
-    // Documentation: https://swapi.info/people
+    // Fetch price feed from the Kasheba Analytics API.
     string source =
         "const name = args[0];"
         "const apiResponse = await Functions.makeHttpRequest({"
-        "url: `https://kasheba-analytics-api-gl5bbi32cq-ts.a.run.app/api/city/${name}`"
+        "url: `https://kasheba-analytics-api-gl5bbi32cq-ts.a.run.app/api/city/code/${name}`"
         "});"
         "if (apiResponse.error) {"
         "throw Error('Request failed');"
@@ -53,11 +46,11 @@ contract AnalyticsAPICaller is FunctionsClient, ConfirmedOwner {
         "return Functions.encodeString(JSON.stringify(data));";
 
     //Callback gas limit
-    uint32 immutable gasLimit;
+    uint32 public immutable gasLimit = 300000;
 
     // donID - Hardcoded for Sepolia
     // Check to get the donID for your supported network https://docs.chain.link/chainlink-functions/supported-networks
-    bytes32 immutable donID;
+    bytes32 public immutable donID;
 
     // State variable to store the returned character information
     string public character;
@@ -66,9 +59,8 @@ contract AnalyticsAPICaller is FunctionsClient, ConfirmedOwner {
      * @notice Initializes the contract with the Chainlink router address and sets the contract owner
      */
     constructor(bytes32 _donID, address _router) FunctionsClient(router) ConfirmedOwner(msg.sender) {
-        router = _router;
-        gasLimit = 300000;
         donID = _donID;
+        router = _router;
     }
 
     /**
@@ -80,7 +72,7 @@ contract AnalyticsAPICaller is FunctionsClient, ConfirmedOwner {
     function sendRequest(
         uint64 subscriptionId,
         string[] calldata args
-    ) external onlyOwner returns (bytes32 requestId) {
+    ) external onlyOwner virtual returns (bytes32 requestId) {
         FunctionsRequest.Request memory req;
         req.initializeRequestForInlineJavaScript(source); // Initialize the request with JS code
         if (args.length > 0) req.setArgs(args); // Set the arguments for the request
