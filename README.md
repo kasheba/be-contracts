@@ -1,9 +1,11 @@
 # be-contracts
+
 VeDA solidity contracts backend repository
 
-## sepolia deployment
+## avalanche fuji testnet deployment
 
-## AnalyticsAPICaller
-
-- Contract Address: 0xe784fA26829Cf894095f3716e00A5E99a0D9797A
-- Chainlink subscription: https://functions.chain.link/sepolia/2640
+| Contract | Address | Misc |
+|----------|---------|------|
+| AnalyticsAPICaller | 0x736173F27e22dDd6A259E6fC77c494B7cE0ff09E| <https://functions.chain.link/fuji/8721> |
+| CityIndexFactory | 0x24fb0f7444B3309DADF5e6B0f325278776466c15 | |
+| CityIndex| 0x355A7F434c0A7deaE86F5A5DbE88e71CD12a6CB9 | INIT token |
