@@ -28,7 +28,7 @@ contract KashebaTrading is Ownable {
     event PositionClosed(address indexed user, address indexed token, uint256 amount, bool isLong);
     event PriceUpdated(address indexed token, uint256 price);
 
-    constructor(address _kashebaTokenAddress) {
+    constructor(address _kashebaTokenAddress) Ownable(msg.sender) {
         kashebaToken = IKashebaToken(_kashebaTokenAddress);
     }
 
