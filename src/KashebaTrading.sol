@@ -87,7 +87,7 @@ contract KashebaTrading is Ownable {
         return payout;
     }
 
-    function checkStopLossAndTakeProfit(address user, address token) external view returns (bool positionsClosed) {
+    function checkStopLossAndTakeProfit(address user, address token) external returns (bool positionsClosed) {
         Position storage position = userPositions[user][token];
         uint256 price = tokenPrices[token];
         bool anyPositionsClosed = false;
